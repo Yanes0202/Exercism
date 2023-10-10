@@ -1,4 +1,7 @@
 package org.adrian.com.remoteControlCompetition;
 
-public class RemoteControlCar {
+public interface RemoteControlCar {
+    void drive();
+
+    int getDistanceTravelled();
 }
