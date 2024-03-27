@@ -1,5 +1,6 @@
 package org.adrian.com.calculatorConundrum;
 
+import java.util.Arrays;
 import java.util.function.BiFunction;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ class CalculatorConundrum {
 enum Operation {
     ADD("+", Integer::sum),
     MULTIPLY("*", (a, b) -> a * b),
+    DECREASE("-", (a, b) -> a - b),
     DIVIDE("/", (a, b) -> {
         if (b == 0) {
             throw new IllegalOperationException("Division by zero is not allowed", new ArithmeticException());
@@ -34,15 +36,12 @@ enum Operation {
         if (symbol.isBlank())
             throw new IllegalArgumentException("Operation cannot be empty");
 
-        for (Operation op : values()) {
-            if (op.symbol.equals(symbol)) {
-                return op;
-            }
-        }
-        throw new IllegalOperationException("Operation '" + symbol + "' does not exist");
+        return Arrays.stream(values())
+                .filter(s -> s.symbol.equals(symbol))
+                .findFirst().orElseThrow(() -> new IllegalOperationException("Operation '" + symbol + "' does not exist"));
     }
 
     public String apply(int operand1, int operand2) {
-        return String.format("%s %s %s = %d", operand1, symbol, operand2, function.apply(operand1, operand2));
+        return String.format("%s = %d", operand1 + " " + symbol + " " + operand2, function.apply(operand1, operand2));
     }
 }
